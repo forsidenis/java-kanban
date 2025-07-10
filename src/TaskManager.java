@@ -10,7 +10,7 @@ class TaskManager {
         return nextId++;
     }
 
-    // Методы для обычных задач
+    // Методы для задач
     public List<Task> getAllTasks() {
         return new ArrayList<>(tasks.values());
     }
@@ -62,6 +62,7 @@ class TaskManager {
         if (savedEpic != null) {
             savedEpic.setTitle(epic.getTitle());
             savedEpic.setDescription(epic.getDescription());
+            updateEpicStatus(savedEpic);  // пересчет статуса после обновления
         }
     }
 
