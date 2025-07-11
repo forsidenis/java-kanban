@@ -1,5 +1,8 @@
-import java.util.*;
-class Task {
+package task;
+
+import java.util.Objects;
+
+public class Task {
     private int id;
     private String title;
     private String description;
@@ -18,15 +21,37 @@ class Task {
         this.status = status;
     }
 
-    // Геттеры и сеттеры
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     @Override
     public boolean equals(Object o) {
