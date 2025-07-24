@@ -1,3 +1,4 @@
+import manager.Managers;
 import manager.TaskManager;
 import task.Epic;
 import task.Status;
@@ -6,7 +7,8 @@ import task.Task;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager manager = new TaskManager();
+
+        TaskManager manager = Managers.getDefault();
 
         // Создание задач
         Task task1 = new Task("Помыть посуду", "Срочная задача");
@@ -28,11 +30,17 @@ public class Main {
         Subtask subtask3 = new Subtask("Выбрать район", "", epic2.getId());
         manager.createSubtask(subtask3);
 
+        // Просматриваем задачи (добавляются в историю)
+        manager.getTaskById(task1.getId());
+        manager.getEpicById(epic1.getId());
+        manager.getSubtaskById(subtask1.getId());
+
         // Вывод всех задач
         System.out.println("--- Все задачи ---");
         System.out.println("Задачи: " + manager.getAllTasks());
         System.out.println("Эпики: " + manager.getAllEpics());
         System.out.println("Подзадачи: " + manager.getAllSubtasks());
+        System.out.println("История: " + manager.getHistory());
 
         // Изменение статусов
         Subtask s1 = manager.getSubtaskById(subtask1.getId());
@@ -51,6 +59,7 @@ public class Main {
         System.out.println("\n--- После обновления статусов ---");
         System.out.println("Эпик 1: " + manager.getEpicById(epic1.getId()));
         System.out.println("Эпик 2: " + manager.getEpicById(epic2.getId()));
+        System.out.println("История: " + manager.getHistory());
 
         // Удаление задач
         manager.deleteTask(task1.getId());
@@ -60,5 +69,6 @@ public class Main {
         System.out.println("Задачи: " + manager.getAllTasks());
         System.out.println("Эпики: " + manager.getAllEpics());
         System.out.println("Подзадачи: " + manager.getAllSubtasks());
+        System.out.println("История: " + manager.getHistory());
     }
 }
