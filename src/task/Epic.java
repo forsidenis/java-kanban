@@ -1,6 +1,7 @@
 package task;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
     private final List<Integer> subtaskIds = new ArrayList<>();
@@ -13,13 +14,9 @@ public class Epic extends Task {
         super(id, title, description, status);
     }
 
-    @Override
-    public void setStatus(Status status) {
-        throw new UnsupportedOperationException("Status of Epic is calculated automatically");
-    }
-
-    public void updateStatus(Status status) {
-        super.setStatus(status);
+    public Epic(Epic original) {
+        super(original);
+        this.subtaskIds.addAll(original.subtaskIds);
     }
 
     public List<Integer> getSubtaskIds() {
