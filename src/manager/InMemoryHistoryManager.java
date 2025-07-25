@@ -21,7 +21,16 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        history.removeIf(task -> task.getId() == id);
+        LinkedList<Task> newHistory = new LinkedList<>();
+
+        for (Task task : history) {
+            if (task.getId() != id) {
+                newHistory.add(task);
+            }
+        }
+
+        history.clear();
+        history.addAll(newHistory);
     }
 
     @Override
