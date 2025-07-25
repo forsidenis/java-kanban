@@ -21,7 +21,7 @@ class InMemoryHistoryManagerTest {
 
         assertNotNull(history, "История не должна быть null");
         assertEquals(1, history.size(), "История должна содержать 1 задачу");
-        assertEquals(task, history.get(0), "Задачи в истории должны совпадать");
+        assertEquals(task, history.getFirst(), "Задачи в истории должны совпадать");
     }
 
     @Test
