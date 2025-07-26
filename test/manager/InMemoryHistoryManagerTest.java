@@ -48,8 +48,8 @@ class InMemoryHistoryManagerTest {
 
         manager.add(task);
         manager.add(task);
-        List<Task> history = manager.getHistory();
 
+        List<Task> history = manager.getHistory();
         assertEquals(2, history.size(), "История должна содержать дубликаты");
         assertEquals(task, history.get(0), "Первая задача должна быть оригиналом");
         assertEquals(task, history.get(1), "Вторая задача должна быть дубликатом");

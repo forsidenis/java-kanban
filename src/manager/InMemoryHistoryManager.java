@@ -1,9 +1,7 @@
 package manager;
 
 import task.Task;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int MAX_HISTORY = 10;
@@ -14,23 +12,20 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) return;
 
         if (history.size() >= MAX_HISTORY) {
-            history.removeFirst();
+            history.remove(0);
         }
         history.add(task);
     }
 
     @Override
     public void remove(int id) {
-        LinkedList<Task> newHistory = new LinkedList<>();
-
-        for (Task task : history) {
-            if (task.getId() != id) {
-                newHistory.add(task);
+        Iterator<Task> iterator = history.iterator();
+        while (iterator.hasNext()) {
+            Task task = iterator.next();
+            if (task.getId() == id) {
+                iterator.remove();
             }
         }
-
-        history.clear();
-        history.addAll(newHistory);
     }
 
     @Override
