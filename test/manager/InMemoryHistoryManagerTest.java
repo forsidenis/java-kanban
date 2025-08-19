@@ -73,4 +73,16 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, history.size());
         assertEquals(task2, history.get(0));
     }
+    @Test
+    void noDuplicatesInHistory() {
+        HistoryManager manager = new InMemoryHistoryManager();
+        Task task = new Task("Test task", "Description");
+        task.setId(1);
+
+        manager.add(task);
+        manager.add(task); // Добавляем второй раз
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size(), "История не должна содержать дубликатов");
+    }
 }
