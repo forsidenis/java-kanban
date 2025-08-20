@@ -25,33 +25,64 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historySizeLimit() {
-        HistoryManager manager = new InMemoryHistoryManager();
-
-        for (int i = 1; i <= 15; i++) {
-            Task task = new Task("Task " + i, "Description");
-            task.setId(i);
-            manager.add(task);
-        }
-
-        List<Task> history = manager.getHistory();
-        assertEquals(10, history.size(), "История должна содержать максимум 10 задач");
-        assertEquals(6, history.get(0).getId(), "Первая задача в истории должна быть Task 6");
-        assertEquals(15, history.get(9).getId(), "Последняя задача в истории должна быть Task 15");
-    }
-
-    @Test
-    void allowDuplicates() {
+    void removeDuplicates() {
         HistoryManager manager = new InMemoryHistoryManager();
         Task task = new Task("Test task", "Description");
         task.setId(1);
 
         manager.add(task);
-        manager.add(task);
+        manager.add(task); // Дубликат
 
         List<Task> history = manager.getHistory();
-        assertEquals(2, history.size(), "История должна содержать дубликаты");
-        assertEquals(task, history.get(0), "Первая задача должна быть оригиналом");
-        assertEquals(task, history.get(1), "Вторая задача должна быть дубликатом");
+        assertEquals(1, history.size(), "История должна содержать только уникальные задачи");
+    }
+
+    @Test
+    void historyOrder() {
+        HistoryManager manager = new InMemoryHistoryManager();
+        Task task1 = new Task("Task1", "Description");
+        task1.setId(1);
+        Task task2 = new Task("Task2", "Description");
+        task2.setId(2);
+        Task task3 = new Task("Task3", "Description");
+        task3.setId(3);
+
+        manager.add(task1);
+        manager.add(task2);
+        manager.add(task3);
+        manager.add(task1); // Повторное добавление
+
+        List<Task> history = manager.getHistory();
+        assertEquals(List.of(task2, task3, task1), history,
+                "Порядок задач должен соответствовать последним просмотрам");
+    }
+
+    @Test
+    void removeFromHistory() {
+        HistoryManager manager = new InMemoryHistoryManager();
+        Task task1 = new Task("Task1", "Description");
+        task1.setId(1);
+        Task task2 = new Task("Task2", "Description");
+        task2.setId(2);
+
+        manager.add(task1);
+        manager.add(task2);
+        manager.remove(1);
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size());
+        assertEquals(task2, history.get(0));
+    }
+    @Test
+    void noDuplicatesInHistory() {
+        HistoryManager manager = new InMemoryHistoryManager();
+        Task task = new Task("Test task", "Description");
+        task.setId(1);
+
+        manager.add(task);
+        manager.add(task); // Добавляем второй раз
+
+        List<Task> history = manager.getHistory();
+        assertEquals(1, history.size(), "История не должна содержать дубликатов");
     }
 }
