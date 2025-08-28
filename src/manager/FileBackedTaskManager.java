@@ -202,15 +202,3 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return historyIds;
     }
 }
-
-enum TaskType {
-    TASK,
-    EPIC,
-    SUBTASK
-}
-
-class ManagerSaveException extends RuntimeException {
-    public ManagerSaveException(String message, Throwable cause) {
-        super(message, cause);
-    }
-}
