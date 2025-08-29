@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerSaveException;
 import task.*;
 
 import java.io.*;
@@ -90,14 +91,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private String toString(Task task) {
-        String type = TaskType.TASK.toString();
-        String epicId = "";
-        if (task instanceof Epic) {
-            type = TaskType.EPIC.toString();
-        } else if (task instanceof Subtask) {
-            type = TaskType.SUBTASK.toString();
-            epicId = Integer.toString(((Subtask) task).getEpicId());
-        }
+        TaskType type = task.getType();
+        String epicId = type == TaskType.SUBTASK ? Integer.toString(((Subtask) task).getEpicId()) : "";
+
         return String.format("%d,%s,%s,%s,%s,%s",
                 task.getId(),
                 type,
@@ -118,17 +114,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
         manager.isLoading = true;
+
+        String line;
+        boolean isHistorySection = false;
+        int maxId = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
-            String line;
-            boolean isHistorySection = false;
-            int maxId = 0;
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
                     isHistorySection = true;
                     continue;
                 }
+
                 if (isHistorySection) {
                     List<Integer> historyIds = historyFromString(line);
+
                     for (Integer id : historyIds) {
                         if (manager.tasks.containsKey(id)) {
                             manager.historyManager.add(manager.tasks.get(id));
@@ -141,13 +140,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 } else if (!line.startsWith("id")) {
                     Task task = fromString(line);
                     int id = task.getId();
-                    if (id > maxId) maxId = id;
-                    if (task instanceof Epic) {
-                        manager.epics.put(id, (Epic) task);
-                    } else if (task instanceof Subtask) {
-                        manager.subtasks.put(id, (Subtask) task);
-                    } else {
-                        manager.tasks.put(id, task);
+
+                    if (id > maxId) {
+                        maxId = id;
+                    }
+
+                    switch (task.getType()) {
+                        case EPIC:
+                            manager.epics.put(id, (Epic) task);
+                            break;
+                        case SUBTASK:
+                            manager.subtasks.put(id, (Subtask) task);
+                            break;
+                        default:
+                            manager.tasks.put(id, task);
                     }
                 }
             }
