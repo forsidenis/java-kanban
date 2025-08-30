@@ -17,6 +17,27 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
+    public Task getTaskById(int id) {
+        Task task = super.getTaskById(id);
+        save();
+        return task;
+    }
+
+    @Override
+    public Epic getEpicById(int id) {
+        Epic epic = super.getEpicById(id);
+        save();
+        return epic;
+    }
+
+    @Override
+    public Subtask getSubtaskById(int id) {
+        Subtask subtask = super.getSubtaskById(id);
+        save();
+        return subtask;
+    }
+
+    @Override
     public void createTask(Task task) {
         super.createTask(task);
         save();
@@ -70,9 +91,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() {
-        if (isLoading) return;
-        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
+    protected void save() {
+        if (isLoading) {
+            return;
+        }
+            try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             writer.write("id,type,name,status,description,epic\n");
             for (Task task : getAllTasks()) {
                 writer.write(toString(task) + "\n");
@@ -118,6 +141,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String line;
         boolean isHistorySection = false;
         int maxId = 0;
+        Task task;
         try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
@@ -138,7 +162,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         }
                     }
                 } else if (!line.startsWith("id")) {
-                    Task task = fromString(line);
+                    task = fromString(line);
                     int id = task.getId();
 
                     if (id > maxId) {
@@ -160,16 +184,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             manager.nextId = maxId + 1;
 
             // Восстанавливаем связи подзадач в эпиках
+            Epic epic;
             for (Subtask subtask : manager.subtasks.values()) {
-                Epic epic = manager.epics.get(subtask.getEpicId());
+                epic = manager.epics.get(subtask.getEpicId());
                 if (epic != null) {
                     epic.addSubtaskId(subtask.getId());
                 }
             }
 
             // Обновляем статусы эпиков
-            for (Epic epic : manager.epics.values()) {
-                manager.updateEpicStatus(epic.getId());
+            for (Epic epicItem : manager.epics.values()) {
+                manager.updateEpicStatus(epicItem.getId());
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения файла", e);
