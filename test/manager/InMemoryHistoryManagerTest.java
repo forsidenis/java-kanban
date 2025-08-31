@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryHistoryManagerTest {
+public class InMemoryHistoryManagerTest {
     @Test
     void addAndGetHistory() {
         HistoryManager manager = new InMemoryHistoryManager();
@@ -25,7 +25,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeDuplicates() {
+    public void removeDuplicates() {
         HistoryManager manager = new InMemoryHistoryManager();
         Task task = new Task("Test task", "Description");
         task.setId(1);
@@ -38,7 +38,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void historyOrder() {
+    public void historyOrder() {
         HistoryManager manager = new InMemoryHistoryManager();
         Task task1 = new Task("Task1", "Description");
         task1.setId(1);
@@ -58,7 +58,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void removeFromHistory() {
+    public void removeFromHistory() {
         HistoryManager manager = new InMemoryHistoryManager();
         Task task1 = new Task("Task1", "Description");
         task1.setId(1);
@@ -73,8 +73,9 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, history.size());
         assertEquals(task2, history.get(0));
     }
+
     @Test
-    void noDuplicatesInHistory() {
+    public void noDuplicatesInHistory() {
         HistoryManager manager = new InMemoryHistoryManager();
         Task task = new Task("Test task", "Description");
         task.setId(1);

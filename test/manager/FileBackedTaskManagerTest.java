@@ -1,5 +1,6 @@
 package manager;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import task.Epic;
@@ -14,13 +15,19 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest {
+public class FileBackedTaskManagerTest {
 
     @TempDir
     Path tempDir;
+    private File testFile;
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        testFile = tempDir.resolve("test.csv").toFile();
+    }
 
     @Test
-    void testSaveAndLoadEmptyFile() throws IOException {
+    public void testSaveAndLoadEmptyFile() throws IOException {
         File file = tempDir.resolve("test.csv").toFile();
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
@@ -37,7 +44,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void testSaveAndLoadWithTasks() throws IOException {
+    public void testSaveAndLoadWithTasks() throws IOException {
         File file = tempDir.resolve("test.csv").toFile();
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
@@ -74,7 +81,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void testEpicStatusCalculationAfterLoad() throws IOException {
+    public void testEpicStatusCalculationAfterLoad() throws IOException {
         File file = tempDir.resolve("test.csv").toFile();
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 
@@ -102,7 +109,7 @@ class FileBackedTaskManagerTest {
     }
 
     @Test
-    void testHistoryPreservation() throws IOException {
+    public void testHistoryPreservation() throws IOException {
         File file = tempDir.resolve("test.csv").toFile();
         FileBackedTaskManager manager = new FileBackedTaskManager(file);
 

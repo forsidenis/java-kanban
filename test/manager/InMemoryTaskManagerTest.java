@@ -10,13 +10,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class InMemoryTaskManagerTest {
+public class InMemoryTaskManagerTest {
     private TaskManager createManager() {
         return new InMemoryTaskManager();
     }
 
     @Test
-    void createAndGetTask() {
+    public void createAndGetTask() {
         TaskManager manager = createManager();
         Task task = new Task("Test task", "Description");
 
@@ -28,7 +28,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyForDifferentTaskTypes() {
+    public void historyForDifferentTaskTypes() {
         TaskManager manager = createManager();
 
         Task task = new Task("Task", "Description");
@@ -52,7 +52,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void updateEpicStatus() {
+    public void updateEpicStatus() {
         TaskManager manager = createManager();
         Epic epic = new Epic("Epic", "Description");
         manager.createEpic(epic);
@@ -81,7 +81,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void deleteTaskRemovesFromHistory() {
+    public void deleteTaskRemovesFromHistory() {
         TaskManager manager = createManager();
         Task task = new Task("Task", "Description");
         manager.createTask(task);

@@ -3,10 +3,10 @@ package task;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class SubtaskTest {
+public class SubtaskTest {
 
     @Test
-    void subtaskEqualityById() {
+    public void subtaskEqualityById() {
         Subtask subtask1 = new Subtask("Subtask 1", "Description", 1);
         subtask1.setId(1);
 
@@ -17,7 +17,7 @@ class SubtaskTest {
     }
 
     @Test
-    void copyConstructor() {
+    public void copyConstructor() {
         Subtask original = new Subtask("Original", "Description", 1);
         original.setId(2);
         original.setStatus(Status.DONE);
