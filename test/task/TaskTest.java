@@ -3,9 +3,9 @@ package task;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskTest {
+public class TaskTest {
     @Test
-    void taskEqualityById() {
+    public void taskEqualityById() {
         Task task1 = new Task("Task 1", "Description");
         task1.setId(1);
 
@@ -16,7 +16,7 @@ class TaskTest {
     }
 
     @Test
-    void copyConstructor() {
+    public void copyConstructor() {
         Task original = new Task("Original", "Description");
         original.setId(1);
         original.setStatus(Status.IN_PROGRESS);

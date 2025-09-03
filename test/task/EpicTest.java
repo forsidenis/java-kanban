@@ -3,7 +3,7 @@ package task;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-class EpicTest {
+public class EpicTest {
     @Test
     void epicWithoutSubtasks() {
         Epic epic = new Epic("Epic", "Description");
@@ -11,7 +11,7 @@ class EpicTest {
     }
 
     @Test
-    void copyConstructor() {
+    public void copyConstructor() {
         Epic original = new Epic("Original", "Description");
         original.setId(1);
         original.addSubtaskId(2);
