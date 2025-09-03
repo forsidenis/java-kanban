@@ -147,6 +147,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String[] fields = null;
         int id = 0;
         TaskType type = null;
+        Integer historyId = null;
+        Integer idForHistory = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty()) {
@@ -156,16 +158,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 if (isHistorySection) {
                     historyIds = historyFromString(line);
-
-                    Integer historyId = null;
-                    for (int i = 0; i < historyIds.size(); i++) {
-                        historyId = historyIds.get(i);
-                        if (manager.tasks.containsKey(historyId)) {
-                            manager.historyManager.add(manager.tasks.get(historyId));
-                        } else if (manager.epics.containsKey(historyId)) {
-                            manager.historyManager.add(manager.epics.get(historyId));
-                        } else if (manager.subtasks.containsKey(historyId)) {
-                            manager.historyManager.add(manager.subtasks.get(historyId));
+                    int size = historyIds.size();
+                    for (int i = 0; i < size; i++) {
+                        idForHistory = historyIds.get(i);
+                        if (manager.tasks.containsKey(idForHistory)) {
+                            manager.historyManager.add(manager.tasks.get(idForHistory));
+                        } else if (manager.epics.containsKey(idForHistory)) {
+                            manager.historyManager.add(manager.epics.get(idForHistory));
+                        } else if (manager.subtasks.containsKey(idForHistory)) {
+                            manager.historyManager.add(manager.subtasks.get(idForHistory));
                         }
                     }
                 } else if (!line.startsWith("id")) {

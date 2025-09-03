@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileBackedTaskManagerTest {
 
     @TempDir
-    Path tempDir;
+    private Path tempDir;
     private File testFile;
 
     @BeforeEach
