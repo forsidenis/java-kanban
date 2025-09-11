@@ -309,29 +309,32 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        Duration totalDuration = Duration.ZERO;
-        LocalDateTime earliestStartTime = null;
-        LocalDateTime latestEndTime = null;
+        epic.setDuration(calculateEpicDuration(epicSubtasks));
+        epic.setStartTime(calculateEpicStartTime(epicSubtasks));
+        epic.setEndTime(calculateEpicEndTime(epicSubtasks));
+    }
 
-        for (Subtask subtask : epicSubtasks) {
-            if (subtask.getDuration() != null) {
-                totalDuration = totalDuration.plus(subtask.getDuration());
-            }
-            if (subtask.getStartTime() != null) {
-                if (earliestStartTime == null || subtask.getStartTime().isBefore(earliestStartTime)) {
-                    earliestStartTime = subtask.getStartTime();
-                }
-            }
-            if (subtask.getEndTime() != null) {
-                if (latestEndTime == null || subtask.getEndTime().isAfter(latestEndTime)) {
-                    latestEndTime = subtask.getEndTime();
-                }
-            }
-        }
+    private Duration calculateEpicDuration(List<Subtask> epicSubtasks) {
+        return epicSubtasks.stream()
+                .map(Subtask::getDuration)
+                .filter(Objects::nonNull)
+                .reduce(Duration.ZERO, Duration::plus);
+    }
 
-        epic.setDuration(totalDuration);
-        epic.setStartTime(earliestStartTime);
-        epic.setEndTime(latestEndTime);
+    private LocalDateTime calculateEpicStartTime(List<Subtask> epicSubtasks) {
+        return epicSubtasks.stream()
+                .map(Subtask::getStartTime)
+                .filter(Objects::nonNull)
+                .min(LocalDateTime::compareTo)
+                .orElse(null);
+    }
+
+    private LocalDateTime calculateEpicEndTime(List<Subtask> epicSubtasks) {
+        return epicSubtasks.stream()
+                .map(Subtask::getEndTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
     }
 
     private void validateTaskTime(Task task) {

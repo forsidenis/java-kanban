@@ -6,6 +6,7 @@ import task.Epic;
 import task.Status;
 import task.Subtask;
 import task.Task;
+import java.util.List;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -60,4 +61,56 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
         manager.deleteTask(task.getId());
         assertTrue(manager.getHistory().isEmpty());
     }
+
+    @Test
+    public void shouldHandleEmptyTaskList() {
+        // b. С пустым списком задач
+        assertTrue(manager.getAllTasks().isEmpty());
+        assertTrue(manager.getAllEpics().isEmpty());
+        assertTrue(manager.getAllSubtasks().isEmpty());
+    }
+
+    @Test
+    public void shouldHandleInvalidTaskId() {
+        // c. С неверным идентификатором задачи
+        assertNull(manager.getTaskById(-1), "Несуществующий ID задачи должен возвращать null");
+        assertNull(manager.getEpicById(-1), "Несуществующий ID эпика должен возвращать null");
+        assertNull(manager.getSubtaskById(-1), "Несуществующий ID подзадачи должен возвращать null");
+    }
+
+    @Test
+    public void shouldHandleTaskDeletionWithInvalidId() {
+        // С неверным идентификатором задачи при удалении
+        assertDoesNotThrow(() -> manager.deleteTask(-1),
+                "Удаление несуществующей задачи не должно вызывать исключение");
+        assertDoesNotThrow(() -> manager.deleteEpic(-1),
+                "Удаление несуществующего эпика не должно вызывать исключение");
+        assertDoesNotThrow(() -> manager.deleteSubtask(-1),
+                "Удаление несуществующей подзадачи не должно вызывать исключение");
+    }
+
+    @Test
+    public void shouldHandleTaskUpdateWithInvalidId() {
+        // С неверным идентификатором задачи при обновлении
+        Task invalidTask = new Task("Invalid", "Description");
+        invalidTask.setId(-1);
+
+        assertDoesNotThrow(() -> manager.updateTask(invalidTask),
+                "Обновление несуществующей задачи не должно вызывать исключение");
+
+        Epic invalidEpic = new Epic("Invalid", "Description");
+        invalidEpic.setId(-1);
+
+        assertDoesNotThrow(() -> manager.updateEpic(invalidEpic),
+                "Обновление несуществующего эпика не должно вызывать исключение");
+    }
+
+    @Test
+    public void shouldReturnEmptyListForInvalidEpicId() {
+        // С неверным идентификатором эпика при получении подзадач
+        List<Subtask> subtasks = manager.getSubtasksByEpicId(-1);
+        assertTrue(subtasks.isEmpty(),
+                "Получение подзадач для несуществующего эпика должно возвращать пустой список");
+    }
+
 }
