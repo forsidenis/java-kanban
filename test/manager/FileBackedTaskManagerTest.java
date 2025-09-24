@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.NotFoundException;
 import java.io.IOException;
 import java.io.File;
 import java.nio.file.Path;
@@ -15,7 +16,7 @@ import task.Subtask;
 import task.Task;
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @TempDir
     private Path tempDir;
@@ -89,15 +90,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void shouldHandleInvalidTaskId() {
-        // С неверным идентификатором задачи
-        assertNull(manager.getTaskById(-1), "Несуществующий ID задачи должен возвращать null");
-        assertNull(manager.getEpicById(-1), "Несуществующий ID эпика должен возвращать null");
-        assertNull(manager.getSubtaskById(-1), "Несуществующий ID подзадачи должен возвращать null");
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(-1),
+                "Несуществующий ID задачи должен возвращать исключение");
+        assertThrows(NotFoundException.class, () -> manager.getEpicById(-1),
+                "Несуществующий ID эпика должен возвращать исключение");
+        assertThrows(NotFoundException.class, () -> manager.getSubtaskById(-1),
+                "Несуществующий ID подзадачи должен возвращать исключение");
     }
 
     @Test
     public void shouldHandleTaskDeletionWithInvalidId() {
-        // С неверным идентификатором задачи при удалении
         assertDoesNotThrow(() -> manager.deleteTask(-1),
                 "Удаление несуществующей задачи не должно вызывать исключение");
         assertDoesNotThrow(() -> manager.deleteEpic(-1),
@@ -108,7 +110,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void shouldHandleTaskUpdateWithInvalidId() {
-        // c. С неверным идентификатором задачи при обновлении
         Task invalidTask = new Task("Invalid", "Description");
         invalidTask.setId(-1);
 
@@ -124,7 +125,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     @Test
     public void shouldReturnEmptyListForInvalidEpicId() {
-        //  С неверным идентификатором эпика при получении подзадач
         List<Subtask> subtasks = manager.getSubtasksByEpicId(-1);
         assertTrue(subtasks.isEmpty(),
                 "Получение подзадач для несуществующего эпика должно возвращать пустой список");

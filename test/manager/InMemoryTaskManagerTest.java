@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import task.Epic;
@@ -72,15 +73,16 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void shouldHandleInvalidTaskId() {
-        // c. С неверным идентификатором задачи
-        assertNull(manager.getTaskById(-1), "Несуществующий ID задачи должен возвращать null");
-        assertNull(manager.getEpicById(-1), "Несуществующий ID эпика должен возвращать null");
-        assertNull(manager.getSubtaskById(-1), "Несуществующий ID подзадачи должен возвращать null");
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(-1),
+                "Несуществующий ID задачи должен бросать исключение");
+        assertThrows(NotFoundException.class, () -> manager.getEpicById(-1),
+                "Несуществующий ID эпика должен бросать исключение");
+        assertThrows(NotFoundException.class, () -> manager.getSubtaskById(-1),
+                "Несуществующий ID подзадачи должен бросать исключение");
     }
 
     @Test
     public void shouldHandleTaskDeletionWithInvalidId() {
-        // С неверным идентификатором задачи при удалении
         assertDoesNotThrow(() -> manager.deleteTask(-1),
                 "Удаление несуществующей задачи не должно вызывать исключение");
         assertDoesNotThrow(() -> manager.deleteEpic(-1),
@@ -91,7 +93,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void shouldHandleTaskUpdateWithInvalidId() {
-        // С неверным идентификатором задачи при обновлении
         Task invalidTask = new Task("Invalid", "Description");
         invalidTask.setId(-1);
 
@@ -107,7 +108,6 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Test
     public void shouldReturnEmptyListForInvalidEpicId() {
-        // С неверным идентификатором эпика при получении подзадач
         List<Subtask> subtasks = manager.getSubtasksByEpicId(-1);
         assertTrue(subtasks.isEmpty(),
                 "Получение подзадач для несуществующего эпика должно возвращать пустой список");

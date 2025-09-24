@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.NotFoundException;
 import exceptions.ManagerValidationException;
 import org.junit.jupiter.api.Test;
 import task.Epic;
@@ -157,15 +158,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     protected void shouldHandleInvalidIds() {
-        // c. С неверным идентификатором задачи
-        assertNull(manager.getTaskById(-1));
-        assertNull(manager.getEpicById(-1));
-        assertNull(manager.getSubtaskById(-1));
+        assertThrows(NotFoundException.class, () -> manager.getTaskById(-1));
+        assertThrows(NotFoundException.class, () -> manager.getEpicById(-1));
+        assertThrows(NotFoundException.class, () -> manager.getSubtaskById(-1));
     }
 
     @Test
     protected void shouldHandleDeletionOfNonExistentTasks() {
-        // c. С неверным идентификатором задачи при удалении
         assertDoesNotThrow(() -> manager.deleteTask(-1));
         assertDoesNotThrow(() -> manager.deleteEpic(-1));
         assertDoesNotThrow(() -> manager.deleteSubtask(-1));
@@ -173,7 +172,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     protected void shouldHandleUpdatesOfNonExistentTasks() {
-        // c. С неверным идентификатором задачи при обновлении
         Task task = new Task("Test", "Description");
         task.setId(-1);
         assertDoesNotThrow(() -> manager.updateTask(task));
