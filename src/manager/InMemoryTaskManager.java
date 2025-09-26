@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import exceptions.ManagerValidationException;
+import exceptions.NotFoundException;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int nextId = 1;
@@ -45,9 +46,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
-        if (task != null) {
-            historyManager.add(new Task(task));
+        if (task == null) {
+            throw new NotFoundException("Задача с id=" + id + " не найдена");
         }
+        historyManager.add(new Task(task));
         return task;
     }
 
@@ -107,9 +109,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
-        if (epic != null) {
-            historyManager.add(new Epic(epic));
+        if (epic == null) {
+            throw new NotFoundException("Эпик с id=" + id + " не найдена");
         }
+        historyManager.add(new Epic(epic));
         return epic;
     }
 
@@ -163,9 +166,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
-        if (subtask != null) {
-            historyManager.add(new Subtask(subtask));
+        if (subtask == null) {
+            throw new NotFoundException("Подзадача с id=" + id + " не найдена");
         }
+        historyManager.add(new Subtask(subtask));
         return subtask;
     }
 
